@@ -1,0 +1,46 @@
+<?php
+// Database configuration
+$servername = "localhost"; // Change this to your database server name
+$username = "username"; // Change this to your database username
+$password = "password"; // Change this to your database password
+$database = "insurance_management"; // Change this to your database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Function to insert a new insurance policy into the database
+function addInsurancePolicy($policy_holder, $policy_type, $premium_amount, $start_date, $end_date) {
+    global $conn;
+    $sql = "INSERT INTO insurance_policies (policy_holder, policy_type, premium_amount, start_date, end_date) VALUES ('$policy_holder', '$policy_type', '$premium_amount', '$start_date', '$end_date')";
+    if ($conn->query($sql) === TRUE) {
+        return "New record created successfully";
+    } else {
+        return "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
+// Function to retrieve all insurance policies from the database
+function getAllInsurancePolicies() {
+    global $conn;
+    $sql = "SELECT * FROM insurance_policies";
+    $result = $conn->query($sql);
+    $policies = array();
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $policies[] = $row;
+        }
+    }
+    return $policies;
+}
+
+// Close the database connection
+function closeConnection() {
+    global $conn;
+    $conn->close();
+}
+?>
